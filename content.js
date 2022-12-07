@@ -1,30 +1,53 @@
-// Listen for messages from the background script
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  // If the message is a search query, perform a ChatGPT search
-  if (message.type === "search") {
-    // Perform a ChatGPT search using the query in message.query
-    fetch(`https://api.openai.com/v1/completions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer YOUR_API_KEY`,
-      },
-      body: JSON.stringify({
-        prompt: message.query,
-        model: "text-davinci-002",
-        temperature: 0.5,
-        max_tokens: 1024,
-        top_p: 1,
-        frequency_penalty: 0,
-        presence_penalty: 0,
-      }),
+"use strict";
+const url = window.location.href;
+const params = new URLSearchParams(url.split("?")[1]);
+const query = params.get("q");
+if (query && url.startsWith("https://www.google.com/search?")) {
+  // getting html element ready
+  document.getElementById("extabar").insertAdjacentHTML("afterend", `<div id="chatGPTDiv"></div>`);
+  const chatDiv = document.getElementById("chatGPTDiv");
+  chatDiv.style.width = "var(--center-width)";
+  chatDiv.style.maxWidth =
+    "Calc(var(--center-abs-margin) + var(--center-width) + var(--rhs-margin) + var(--rhs-width))";
+  chatDiv.style.background = "#343541";
+  chatDiv.style.borderRadius = "4px";
+  chatDiv.style.padding = "8px";
+  chatDiv.innerText = query;
+  const answerDiv = document.createElement("div");
+  answerDiv.style.padding = "8px";
+  answerDiv.style.marginTop = "16px";
+  answerDiv.style.borderRadius = "4px";
+  answerDiv.style.color = "white";
+  answerDiv.style.backgroundColor = "#444654";
+  answerDiv.innerText = "loading...";
+  chatDiv.appendChild(answerDiv);
+
+  fetch(`https://api.openai.com/v1/completions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer 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`,
+    },
+    body: JSON.stringify({
+      prompt: query,
+      model: "text-davinci-002",
+      temperature: 0.5,
+      max_tokens: 1024,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.choices && data.choices.length) {
+        const choices = data.choices;
+        answerDiv.innerText = choices[0].text;
+      }
     })
-      .then((response) => response.json())
-      .then((data) => {
-        // TODO: Display the ChatGPT search results in the Google search page
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-});
+    .catch((error) => {
+      console.error(error);
+      answerDiv.style.color = "red";
+      answerDiv.innerText = choices[0].text;
+    });
+}
