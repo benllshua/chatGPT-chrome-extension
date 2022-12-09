@@ -26,7 +26,7 @@ if (query && url.startsWith("https://www.google.com/search?")) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer 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`,
+      Authorization: `Bearer [API KEY]`,
     },
     body: JSON.stringify({
       prompt: query,
