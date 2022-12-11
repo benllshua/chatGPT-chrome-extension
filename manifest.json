@@ -1,20 +1,20 @@
 {
-  "manifest_version": 3,
-  "name": "ChatGPT Search Results",
-  "version": "1.2.1",
-  "description": "This extension adds ChatGPT results to Google search results.",
-  "icons": {
-    "32": "icon32.png",
-    "48": "icon48.png",
-    "64": "icon64.png",
-    "128": "icon128.png",
-    "256": "icon256.png"
-  },
-  "permissions": ["activeTab"],
-  "content_scripts": [
-    {
-      "matches": ["https://www.google.com/*"],
-      "js": ["content.js"]
-    }
-  ]
+	"manifest_version": 3,
+	"name": "ChatGPT Search Results",
+	"version": "1.2.2",
+	"description": "This extension adds ChatGPT results to Google search results.",
+	"icons": {
+		"32": "icon32.png",
+		"48": "icon48.png",
+		"64": "icon64.png",
+		"128": "icon128.png",
+		"256": "icon256.png"
+	},
+	"permissions": [],
+	"content_scripts": [
+		{
+			"matches": ["https://www.google.com/*"],
+			"js": ["content.js"]
+		}
+	]
 }
